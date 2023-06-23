@@ -1,0 +1,76 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   so_long_graphics.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tpawson <marvin@42.fr>                     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/08 16:11:15 by tpawson           #+#    #+#             */
+/*   Updated: 2023/06/14 15:48:48 by tpawson          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include "../so_long.h"
+
+void	match_image(int nb, t_vars *g_vars, int y, int x)
+{
+	x *= 100;
+	y *= 100;
+	if (nb == 1)
+		mlx_put_image_to_window(g_vars->mlx, g_vars->window, g_vars->wall, x, y);
+	if (nb == 2)
+		mlx_put_image_to_window(g_vars->mlx, g_vars->window, g_vars->tile, x, y);
+	if (nb == 3)
+	{
+		mlx_put_image_to_window(g_vars->mlx, g_vars->window, g_vars->collectable, x, y);
+		g_vars->collectc++;
+	}
+	if (nb == 4)
+	{
+		mlx_put_image_to_window(g_vars->mlx, g_vars->window, g_vars->player, x, y);
+	}
+	if (nb == 5)
+		mlx_put_image_to_window(g_vars->mlx, g_vars->window, g_vars->exit, x, y);
+	return ;
+}
+
+void	render_sprites(t_vars *g_vars)
+{
+	int	w;
+	int l;
+
+	w = 0;
+	l = 0;
+	g_vars->exit = mlx_xpm_file_to_image(g_vars->mlx, "textures/exit.xpm", &w, &l);
+	g_vars->player = mlx_xpm_file_to_image(g_vars->mlx, "textures/player.xpm", &w, &l);
+	g_vars->tile = mlx_xpm_file_to_image(g_vars->mlx, "textures/tile.xpm", &w, &l);
+	g_vars->wall = mlx_xpm_file_to_image(g_vars->mlx, "textures/wall.xpm", &w, &l);
+	g_vars->collectable = mlx_xpm_file_to_image(g_vars->mlx, "textures/collectable.xpm", &w, &l);
+}
+
+void	match_sprites(t_vars *g_vars)
+{
+	int	y;
+	int	x;
+
+	g_vars->collectc = 0;
+	y = 0;
+	while(y < g_vars->y_max)
+	{
+		x = 0;
+		while(g_vars->map[y][x])
+		{
+			if(g_vars->map[y][x] == '1')
+				match_image(1, g_vars, y, x);
+			if(g_vars->map[y][x] == '0')
+				match_image(2, g_vars, y, x);
+			if(g_vars->map[y][x] == 'C')
+				match_image(3, g_vars, y, x);
+			if(g_vars->map[y][x] == 'P')
+				match_image(4, g_vars, y, x);
+			if(g_vars->map[y][x] == 'E')
+				match_image(5, g_vars, y, x);
+			x++;
+		}
+		y++;
+	}
+}	
